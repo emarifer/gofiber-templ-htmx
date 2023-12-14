@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Full stack application using Golang's Fiber framework with user session management + CRUD to a SQLite database (To Do List) and HTMX in the frontend">
+    <meta name="google" content="notranslate" />
+    <link rel="shortcut icon" href="/img/gopher-svgrepo-com.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Todo List | Page Not Found</title>
+    <script src="https://unpkg.com/htmx.org@1.9.9"
+        integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+</head>
+
+<body class="sample-transition" hx-boost="true">
+    <main>
+        <section class="flex flex-col items-center justify-center h-[100vh] gap-4">
+            <div class="items-center justify-center flex flex-col gap-4">
+                <h1 class="text-9xl font-extrabold text-gray-700 tracking-widest">
+                    404
+                </h1>
+                <h2 class="bg-primary px-2 text-sm rounded rotate-12 absolute">
+                    Page not found
+                </h2>
+            </div>
+            <p class="text-xs text-center md:text-sm text-gray-400"
+                _="on load put the location of the window into loc then put `The page '${loc}' doesn't exists` into me">
+                This page doesn't exists
+            </p>
+
+            <a hx-swap="transition:true" href="/" class="btn btn-primary btn-outline">
+                Go Home
+            </a>
+        </section>
+    </main>
+</body>
+
+</html>

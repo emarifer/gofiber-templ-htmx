@@ -1,0 +1,35 @@
+package views
+
+import "github.com/gofiber/fiber/v2"
+
+templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="dark">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta
+ 				name="description"
+ 				content="Full stack application using Golang's Fiber framework & Templ templating language with user session management + CRUD to a SQLite database (To Do List) and HTMX in the frontend"
+			/>
+			<meta name="google" content="notranslate"/>
+			<link rel="shortcut icon" href="/img/gopher-svgrepo-com.svg" type="image/svg+xml"/>
+			<link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
+			<script src="https://cdn.tailwindcss.com"></script>
+			<link rel="stylesheet" href="/css/styles.css"/>
+			<title>Todo List{ page }</title>
+			<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+		</head>
+		<body class="sample-transition" hx-boost="true">
+			<header>
+				@Navbar(fromProtected, username)
+			</header>
+			<main class="pt-40">
+				{ children... }
+				@FlashMessages(msg)
+			</main>
+		</body>
+	</html>
+}

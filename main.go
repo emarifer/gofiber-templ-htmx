@@ -33,7 +33,8 @@ http://cryto.net/~joepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-wh
 
 https://github.com/NerdCademyDev/golang/tree/main/23_server_session_auth
 
-GoFiber 🧬
+Attributes in Templ Components. SEE:
+https://templ.guide/syntax-and-usage/attributes/
 
 https://github.com/gofiber/fiber/issues/503
 https://docs.gofiber.io/api/ctx/#locals

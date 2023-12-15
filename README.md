@@ -9,9 +9,9 @@ The application allows us to perform a complete CRUD on the database, in this ca
 The DB stores both a table with the users and another table for each user's to-do. Both tables are related using a foreign key.
 
 >[!IMPORTANT]
->***In this application, instead of using the html/template package (gofiber/template/html, specifically), we use the [a-h/templ](https://github.com/a-h/templ) library. This amazing library implements a templating language (very similar to JSX) that compiles to Go code. Templ will allow us to write code almost identical to Go (with expressions, flow control, if/else, for loops, etc.) and have autocompletion thanks to strong typing, and any call to these templates (which compile as Go functions) from the handlers side will always require the correct data, minimizing errors and thus increasing the security and speed of our coding.***
+>***In this application, instead of using the html/template package (gofiber/template/html, specifically), we use the [a-h/templ](https://github.com/a-h/templ) library. This amazing library implements a templating language (very similar to JSX) that compiles to Go code. Templ will allow us to write code almost identical to Go (with expressions, control flow, if/else, for loops, etc.) and have autocompletion thanks to strong typing. This means that errors appear at compile time and any calls to these templates (which are compiled as Go functions) from the handlers side will always require the correct data, minimizing errors and thus increasing the security and speed of our coding.***
 
-The use of </>html allows behavior similar to that of a SPA, without page reloads when switching from one route to another or when making requests (via AJAX) to the backend.
+The use of </>htmx allows behavior similar to that of a SPA, without page reloads when switching from one route to another or when making requests (via AJAX) to the backend.
 
 On the other hand, the styling of the views is achieved through Tailwind CSS and DaisyUI that are obtained from their respective CDNs.
 

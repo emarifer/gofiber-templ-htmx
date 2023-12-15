@@ -8,6 +8,7 @@ import (
 	"github.com/a-h/templ"
 	"github.com/emarifer/gofiber-templ-htmx/models"
 	"github.com/emarifer/gofiber-templ-htmx/views"
+	"github.com/emarifer/gofiber-templ-htmx/views/auth_views"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/sujit-baniya/flash"
@@ -28,8 +29,8 @@ func HandleViewHome(c *fiber.Ctx) error {
 
 // Render Login Page with success/error messages & session management
 func HandleViewLogin(c *fiber.Ctx) error {
-	lindex := views.LoginIndex(fromProtected)
-	login := views.Home(" | Login", fromProtected, flash.Get(c), lindex)
+	lindex := auth_views.LoginIndex(fromProtected)
+	login := auth_views.Login(" | Login", fromProtected, flash.Get(c), lindex)
 
 	handler := adaptor.HTTPHandler(templ.Handler(login))
 
@@ -90,8 +91,8 @@ func HandleViewLogin(c *fiber.Ctx) error {
 
 // Render Register Page with success/error messages
 func HandleViewRegister(c *fiber.Ctx) error {
-	rindex := views.RegisterIndex(fromProtected)
-	register := views.Home(" | Register", fromProtected, flash.Get(c), rindex)
+	rindex := auth_views.RegisterIndex(fromProtected)
+	register := auth_views.Register(" | Register", fromProtected, flash.Get(c), rindex)
 
 	handler := adaptor.HTTPHandler(templ.Handler(register))
 

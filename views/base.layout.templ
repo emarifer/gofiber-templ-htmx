@@ -1,6 +1,10 @@
 package views
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/emarifer/gofiber-templ-htmx/views/partials"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
 	<!DOCTYPE html>
@@ -24,11 +28,11 @@ templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
 		</head>
 		<body class="sample-transition" hx-boost="true">
 			<header>
-				@Navbar(fromProtected, username)
+				@partials.Navbar(fromProtected, username)
 			</header>
 			<main class="pt-40">
 				{ children... }
-				@FlashMessages(msg)
+				@partials.FlashMessages(msg)
 			</main>
 		</body>
 	</html>

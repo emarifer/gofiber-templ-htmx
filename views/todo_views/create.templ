@@ -1,6 +1,10 @@
-package views
+package todo_views
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+
+	"github.com/emarifer/gofiber-templ-htmx/views"
+)
 
 templ CreateIndex() {
 	<h1 class="text-2xl font-bold text-center mb-8">
@@ -47,7 +51,7 @@ templ Create(
 		username string,
         cmp templ.Component,
     ) {
-	@Layout(page, fromProtected, msg, username) {
+	@views.Layout(page, fromProtected, msg, username) {
 		@cmp
 	}
 }

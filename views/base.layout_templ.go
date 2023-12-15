@@ -10,7 +10,11 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/emarifer/gofiber-templ-htmx/views/partials"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func Layout(page string, fromProtected bool, msg fiber.Map, username string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -70,7 +74,7 @@ func Layout(page string, fromProtected bool, msg fiber.Map, username string) tem
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Navbar(fromProtected, username).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = partials.Navbar(fromProtected, username).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -82,7 +86,7 @@ func Layout(page string, fromProtected bool, msg fiber.Map, username string) tem
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = FlashMessages(msg).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = partials.FlashMessages(msg).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

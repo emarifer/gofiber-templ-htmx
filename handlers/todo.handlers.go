@@ -7,7 +7,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/emarifer/gofiber-templ-htmx/models"
-	"github.com/emarifer/gofiber-templ-htmx/views"
+	"github.com/emarifer/gofiber-templ-htmx/views/todo_views"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/sujit-baniya/flash"
@@ -31,8 +31,8 @@ func HandleViewList(c *fiber.Ctx) error {
 		return flash.WithError(c, fm).Redirect("/todo/list")
 	}
 
-	tindex := views.TodoIndex(todosSlice)
-	tlist := views.TodoList(
+	tindex := todo_views.TodoIndex(todosSlice)
+	tlist := todo_views.TodoList(
 		" | Tasks List",
 		fromProtected,
 		flash.Get(c),
@@ -67,8 +67,8 @@ func HandleViewCreatePage(c *fiber.Ctx) error {
 		return c.Redirect("/todo/list")
 	}
 
-	cindex := views.CreateIndex()
-	create := views.Create(
+	cindex := todo_views.CreateIndex()
+	create := todo_views.Create(
 		" | Create Todo",
 		fromProtected,
 		flash.Get(c),
@@ -125,8 +125,8 @@ func HandleViewEditPage(c *fiber.Ctx) error {
 		return flash.WithSuccess(c, fm).Redirect("/todo/list")
 	}
 
-	uindex := views.UpdateIndex(recoveredTodo)
-	update := views.Update(
+	uindex := todo_views.UpdateIndex(recoveredTodo)
+	update := todo_views.Update(
 		fmt.Sprintf(" | Edit Todo #%d", recoveredTodo.ID),
 		fromProtected,
 		flash.Get(c),

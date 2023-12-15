@@ -1,9 +1,10 @@
-package views
+package todo_views
 
 import (
 	"strconv"
 
 	"github.com/emarifer/gofiber-templ-htmx/models"
+	"github.com/emarifer/gofiber-templ-htmx/views"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -36,20 +37,12 @@ templ UpdateIndex(todo models.Todo) {
 			<footer class="card-actions flex justify-between">
 				<label class="cursor-pointer label flex gap-2">
 					<span class="label-text">Status:</span>
-					if todo.Status {
-						<input
- 							type="checkbox"
- 							class="checkbox checkbox-success"
- 							name="status"
- 							checked
-						/>
-					} else {
-						<input
- 							type="checkbox"
- 							class="checkbox checkbox-success"
- 							name="status"
-						/>
-					}
+					<input
+ 						type="checkbox"
+ 						class="checkbox checkbox-success"
+ 						name="status"
+ 						checked?={ todo.Status }
+					/>
 				</label>
 				<div class="flex gap-4">
 					<button class="badge badge-primary p-4 hover:scale-[1.1]">
@@ -71,7 +64,7 @@ templ Update(
 		username string,
         cmp templ.Component,
     ) {
-	@Layout(page, fromProtected, msg, username) {
+	@views.Layout(page, fromProtected, msg, username) {
 		@cmp
 	}
 }

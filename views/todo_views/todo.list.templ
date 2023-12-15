@@ -1,10 +1,12 @@
-package views
+package todo_views
 
 import (
 	"fmt"
 	"strconv"
 
 	"github.com/emarifer/gofiber-templ-htmx/models"
+	"github.com/emarifer/gofiber-templ-htmx/views"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -82,7 +84,7 @@ templ TodoList(
 		username string,
         cmp templ.Component,
     ) {
-	@Layout(page, fromProtected, msg, username) {
+	@views.Layout(page, fromProtected, msg, username) {
 		@cmp
 	}
 }

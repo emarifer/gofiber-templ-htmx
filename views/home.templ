@@ -13,16 +13,16 @@ templ HomeIndex(fromProtected bool) {
 			<p class="text-base font-thin">You have an account?</p>
 			<footer class="flex gap-4 justify-center">
 				<a
- 					hx-swap="transition:true"
- 					href="/login"
- 					class="badge badge-primary px-6 py-4 hover:scale-[1.1] text-lg font-thin"
+					hx-swap="transition:true"
+					href="/login"
+					class="badge badge-primary px-6 py-4 hover:scale-[1.1] text-lg font-thin"
 				>
 					Log In
 				</a>
 				<a
- 					hx-swap="transition:true"
- 					href="/register"
- 					class="badge badge-neutral px-6 py-4 hover:scale-[1.1] text-lg font-thin"
+					hx-swap="transition:true"
+					href="/register"
+					class="badge badge-neutral px-6 py-4 hover:scale-[1.1] text-lg font-thin"
 				>
 					Sign Up
 				</a>
@@ -32,12 +32,12 @@ templ HomeIndex(fromProtected bool) {
 }
 
 templ Home(
-        page string,
-        fromProtected bool,
-        msg fiber.Map,
-        cmp templ.Component,
-    ) {
-	@Layout(page, fromProtected, msg, "") {
+	page string,
+	fromProtected, isError bool,
+	msg fiber.Map,
+	cmp templ.Component,
+) {
+	@Layout(page, fromProtected, isError, msg, "") {
 		@cmp
 	}
 }

@@ -17,6 +17,8 @@ import (
 
 // Render List Page with success/error messages
 func HandleViewList(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
+
 	todo := new(models.Todo)
 	todo.CreatedBy = c.Locals("userId").(uint64)
 
@@ -35,6 +37,7 @@ func HandleViewList(c *fiber.Ctx) error {
 	tlist := todo_views.TodoList(
 		" | Tasks List",
 		fromProtected,
+		false,
 		flash.Get(c),
 		c.Locals("username").(string),
 		tindex,
@@ -47,6 +50,7 @@ func HandleViewList(c *fiber.Ctx) error {
 
 // Render Create Todo Page with success/error messages
 func HandleViewCreatePage(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
 
 	if c.Method() == "POST" {
 		fm := fiber.Map{
@@ -71,6 +75,7 @@ func HandleViewCreatePage(c *fiber.Ctx) error {
 	create := todo_views.Create(
 		" | Create Todo",
 		fromProtected,
+		false,
 		flash.Get(c),
 		c.Locals("username").(string),
 		cindex,
@@ -83,6 +88,10 @@ func HandleViewCreatePage(c *fiber.Ctx) error {
 
 // Render Edit Todo Page with success/error messages
 func HandleViewEditPage(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
+	session, _ := store.Get(c)
+	tzone := session.Get(TZONE_KEY).(string)
+
 	idParams, _ := strconv.Atoi(c.Params("id"))
 	todoId := uint64(idParams)
 
@@ -125,10 +134,11 @@ func HandleViewEditPage(c *fiber.Ctx) error {
 		return flash.WithSuccess(c, fm).Redirect("/todo/list")
 	}
 
-	uindex := todo_views.UpdateIndex(recoveredTodo)
+	uindex := todo_views.UpdateIndex(recoveredTodo, tzone)
 	update := todo_views.Update(
 		fmt.Sprintf(" | Edit Todo #%d", recoveredTodo.ID),
 		fromProtected,
+		false,
 		flash.Get(c),
 		c.Locals("username").(string),
 		uindex,

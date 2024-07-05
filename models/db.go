@@ -46,6 +46,7 @@ func MakeMigrations() {
 		title VARCHAR(64) NOT NULL,
 		description VARCHAR(255) NULL,
 		status BOOLEAN DEFAULT(FALSE),
+		created_at DATETIME default CURRENT_TIMESTAMP,
 		FOREIGN KEY(created_by) REFERENCES users(id)
 	);`
 

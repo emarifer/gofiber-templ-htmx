@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-templ UpdateIndex(todo models.Todo) {
+templ UpdateIndex(todo models.Todo, tz string) {
 	<h1 class="text-2xl font-bold text-center mb-8">
 		Update Task #{ strconv.Itoa(int(todo.ID)) }
 	</h1>
@@ -18,14 +18,14 @@ templ UpdateIndex(todo models.Todo) {
 			<label class="flex flex-col justify-start gap-2">
 				Title:
 				<input
- 					class="input input-bordered input-primary bg-slate-800"
- 					type="text"
- 					name="title"
- 					value={ todo.Title }
- 					required
- 					autofocus
- 					minlength="3"
- 					maxlength="64"
+					class="input input-bordered input-primary bg-slate-800"
+					type="text"
+					name="title"
+					value={ todo.Title }
+					required
+					autofocus
+					minlength="3"
+					maxlength="64"
 				/>
 			</label>
 			<label class="flex flex-col justify-start gap-2">
@@ -35,15 +35,23 @@ templ UpdateIndex(todo models.Todo) {
 				</textarea>
 			</label>
 			<footer class="card-actions flex justify-between">
-				<label class="cursor-pointer label flex gap-2">
-					<span class="label-text">Status:</span>
-					<input
- 						type="checkbox"
- 						class="checkbox checkbox-success"
- 						name="status"
- 						checked?={ todo.Status }
-					/>
-				</label>
+				<div class="flex gap-6 items-center">
+					<label class="cursor-pointer label flex gap-2">
+						<span class="label-text">Status:</span>
+						<input
+							type="checkbox"
+							class="checkbox checkbox-success"
+							name="status"
+							checked?={ todo.Status }
+						/>
+					</label>
+					<p class="label-text flex gap-2 items-center">
+						Created At:
+						<span class="text-sm font-bold text-amber-500">
+							{ models.ConvertDateTime(tz, todo.CreatedAt) }
+						</span>
+					</p>
+				</div>
 				<div class="flex gap-4">
 					<button class="badge badge-primary p-4 hover:scale-[1.1]">
 						Update
@@ -58,13 +66,13 @@ templ UpdateIndex(todo models.Todo) {
 }
 
 templ Update(
-        page string,
-        fromProtected bool,
-        msg fiber.Map,
-		username string,
-        cmp templ.Component,
-    ) {
-	@views.Layout(page, fromProtected, msg, username) {
+	page string,
+	fromProtected, isError bool,
+	msg fiber.Map,
+	username string,
+	cmp templ.Component,
+) {
+	@views.Layout(page, fromProtected, isError, msg, username) {
 		@cmp
 	}
 }

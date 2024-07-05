@@ -3,18 +3,20 @@ package models
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 type Todo struct {
-	ID          uint64 `json:"id"`
-	CreatedBy   uint64 `json:"created_by"`
-	Title       string `json:"title"`
-	Description string `json:"description,omitempty"`
-	Status      bool   `json:"status,omitempty"`
+	ID          uint64    `json:"id"`
+	CreatedBy   uint64    `json:"created_by"`
+	Title       string    `json:"title"`
+	Description string    `json:"description,omitempty"`
+	Status      bool      `json:"status,omitempty"`
+	CreatedAt   time.Time `json:"created_at,omitempty"`
 }
 
 func (t *Todo) GetAllTodos() ([]Todo, error) {
-	query := fmt.Sprintf("SELECT id, title, description, status FROM todos WHERE created_by = %d ORDER BY id DESC", t.CreatedBy)
+	query := fmt.Sprintf("SELECT id, title, description, status FROM todos WHERE created_by = %d ORDER BY created_at DESC", t.CreatedBy)
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -35,7 +37,7 @@ func (t *Todo) GetAllTodos() ([]Todo, error) {
 
 func (t *Todo) GetNoteById() (Todo, error) {
 
-	query := `SELECT id, title, description, status FROM todos
+	query := `SELECT id, title, description, status, created_at FROM todos
 		WHERE created_by = ? AND id=?`
 
 	stmt, err := db.Prepare(query)
@@ -53,6 +55,7 @@ func (t *Todo) GetNoteById() (Todo, error) {
 		&recoveredTodo.Title,
 		&recoveredTodo.Description,
 		&recoveredTodo.Status,
+		&recoveredTodo.CreatedAt,
 	)
 	if err != nil {
 		return Todo{}, err
@@ -84,6 +87,7 @@ func (t *Todo) CreateTodo() (Todo, error) {
 		&newTodo.Title,
 		&newTodo.Description,
 		&newTodo.Status,
+		&newTodo.CreatedAt,
 	)
 	if err != nil {
 		return Todo{}, err
@@ -149,4 +153,10 @@ func (t *Todo) DeleteTodo() error {
 	}
 
 	return nil
+}
+
+func ConvertDateTime(tz string, dt time.Time) string {
+	loc, _ := time.LoadLocation(tz)
+
+	return dt.In(loc).Format(time.RFC822Z)
 }

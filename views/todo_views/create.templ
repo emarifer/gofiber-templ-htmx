@@ -15,21 +15,21 @@ templ CreateIndex() {
 			<label class="flex flex-col justify-start gap-2">
 				Title:
 				<input
- 					class="input input-bordered input-primary bg-slate-800"
- 					type="text"
- 					name="title"
- 					required
- 					autofocus
- 					minlength="3"
- 					maxlength="64"
+					class="input input-bordered input-primary bg-slate-800"
+					type="text"
+					name="title"
+					required
+					autofocus
+					minlength="3"
+					maxlength="64"
 				/>
 			</label>
 			<label class="flex flex-col justify-start gap-2">
 				Description:
 				<textarea
- 					class="textarea textarea-primary h-36 max-h-36 bg-slate-800"
- 					name="description"
- 					maxlength="255"
+					class="textarea textarea-primary h-36 max-h-36 bg-slate-800"
+					name="description"
+					maxlength="255"
 				></textarea>
 			</label>
 			<footer class="card-actions flex gap-4 justify-end">
@@ -45,13 +45,13 @@ templ CreateIndex() {
 }
 
 templ Create(
-        page string,
-        fromProtected bool,
-        msg fiber.Map,
-		username string,
-        cmp templ.Component,
-    ) {
-	@views.Layout(page, fromProtected, msg, username) {
+	page string,
+	fromProtected, isError bool,
+	msg fiber.Map,
+	username string,
+	cmp templ.Component,
+) {
+	@views.Layout(page, fromProtected, isError, msg, username) {
 		@cmp
 	}
 }

@@ -6,7 +6,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
+templ Layout(
+	page string, fromProtected, isError bool, msg fiber.Map, username string,
+) {
 	<!DOCTYPE html>
 	<html lang="en" data-theme="dark">
 		<head>
@@ -14,8 +16,8 @@ templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
 			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta
- 				name="description"
- 				content="Full stack application using Golang's Fiber framework & Templ templating language with user session management + CRUD to a SQLite database (To Do List) and HTMX in the frontend"
+				name="description"
+				content="Full stack application using Golang's Fiber framework & Templ templating language with user session management + CRUD to a SQLite database (To Do List) and HTMX in the frontend"
 			/>
 			<meta name="google" content="notranslate"/>
 			<link rel="shortcut icon" href="/img/gopher-svgrepo-com.svg" type="image/svg+xml"/>
@@ -25,12 +27,15 @@ templ Layout(page string, fromProtected bool, msg fiber.Map, username string) {
 			<title>Todo List{ page }</title>
 			<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
 			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
 		</head>
 		<body class="sample-transition" hx-boost="true">
 			<header>
-				@partials.Navbar(fromProtected, username)
+				if !isError {
+					@partials.Navbar(fromProtected, username)
+				}
 			</header>
-			<main class="pt-40">
+			<main class={ templ.KV("pt-40", !isError) }>
 				{ children... }
 				@partials.FlashMessages(msg)
 			</main>

@@ -19,8 +19,10 @@ import (
 
 // Render Home Page
 func HandleViewHome(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
+
 	hindex := views.HomeIndex(fromProtected)
-	home := views.Home("", fromProtected, flash.Get(c), hindex)
+	home := views.Home("", fromProtected, false, flash.Get(c), hindex)
 
 	handler := adaptor.HTTPHandler(templ.Handler(home))
 
@@ -29,12 +31,23 @@ func HandleViewHome(c *fiber.Ctx) error {
 
 // Render Login Page with success/error messages & session management
 func HandleViewLogin(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
+
 	lindex := auth_views.LoginIndex(fromProtected)
-	login := auth_views.Login(" | Login", fromProtected, flash.Get(c), lindex)
+	login := auth_views.Login(
+		" | Login", fromProtected, false, flash.Get(c), lindex,
+	)
 
 	handler := adaptor.HTTPHandler(templ.Handler(login))
 
 	if c.Method() == "POST" {
+		// obtaining the time zone from the POST request of the login form
+		tzone := ""
+		if len(c.GetReqHeaders()["X-Timezone"]) != 0 {
+			tzone = c.GetReqHeaders()["X-Timezone"][0]
+			fmt.Println("Tzone:", tzone)
+		}
+
 		var (
 			user models.User
 			err  error
@@ -70,6 +83,7 @@ func HandleViewLogin(c *fiber.Ctx) error {
 
 		session.Set(AUTH_KEY, true)
 		session.Set(USER_ID, user.ID)
+		session.Set(TZONE_KEY, tzone)
 
 		err = session.Save()
 		if err != nil {
@@ -91,8 +105,12 @@ func HandleViewLogin(c *fiber.Ctx) error {
 
 // Render Register Page with success/error messages
 func HandleViewRegister(c *fiber.Ctx) error {
+	fromProtected := c.Locals(FROM_PROTECTED).(bool)
+
 	rindex := auth_views.RegisterIndex(fromProtected)
-	register := auth_views.Register(" | Register", fromProtected, flash.Get(c), rindex)
+	register := auth_views.Register(
+		" | Register", fromProtected, false, flash.Get(c), rindex,
+	)
 
 	handler := adaptor.HTTPHandler(templ.Handler(register))
 
@@ -162,7 +180,8 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	c.Locals("userId", userId)
 	c.Locals("username", user.Username)
-	fromProtected = true
+	c.Locals(FROM_PROTECTED, true)
+	// fromProtected = true
 
 	return c.Next()
 }
@@ -192,7 +211,8 @@ func HandleLogout(c *fiber.Ctx) error {
 		"message": "You have successfully logged out!!",
 	}
 
-	fromProtected = false
+	c.Locals(FROM_PROTECTED, false)
+	// fromProtected = false
 
 	return flash.WithSuccess(c, fm).Redirect("/login")
 }

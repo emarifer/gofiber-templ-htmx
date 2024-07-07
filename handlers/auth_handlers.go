@@ -45,7 +45,7 @@ func HandleViewLogin(c *fiber.Ctx) error {
 		tzone := ""
 		if len(c.GetReqHeaders()["X-Timezone"]) != 0 {
 			tzone = c.GetReqHeaders()["X-Timezone"][0]
-			fmt.Println("Tzone:", tzone)
+			// fmt.Println("Tzone:", tzone)
 		}
 
 		var (
@@ -59,6 +59,19 @@ func HandleViewLogin(c *fiber.Ctx) error {
 		// notice: in production you should not inform the user
 		// with detailed messages about login failures
 		if user, err = models.CheckEmail(c.FormValue("email")); err != nil {
+			// fmt.Println(err)
+			if strings.Contains(err.Error(), "no such table") ||
+				strings.Contains(err.Error(), "database is locked") {
+				// "no such table" is the error that SQLite3 produces
+				// when some table does not exist, and we have only
+				// used it as an example of the errors that can be caught.
+				// Here you can add the errors that you are interested
+				// in throwing as `500` codes.
+				return fiber.NewError(
+					fiber.StatusServiceUnavailable,
+					"database temporarily out of service",
+				)
+			}
 			fm["message"] = "There is no user with that email"
 
 			return flash.WithError(c, fm).Redirect("/login")
@@ -123,6 +136,18 @@ func HandleViewRegister(c *fiber.Ctx) error {
 
 		err := models.CreateUser(user)
 		if err != nil {
+			if strings.Contains(err.Error(), "no such table") ||
+				strings.Contains(err.Error(), "database is locked") {
+				// "no such table" is the error that SQLite3 produces
+				// when some table does not exist, and we have only
+				// used it as an example of the errors that can be caught.
+				// Here you can add the errors that you are interested
+				// in throwing as `500` codes.
+				return fiber.NewError(
+					fiber.StatusServiceUnavailable,
+					"database temporarily out of service",
+				)
+			}
 			if strings.Contains(err.Error(), "UNIQUE constraint failed") {
 				err = errors.New("the email is already in use")
 			}

@@ -4,18 +4,16 @@ import (
 	"log"
 
 	"github.com/emarifer/gofiber-templ-htmx/handlers"
-	"github.com/emarifer/gofiber-templ-htmx/models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func init() {
-	models.MakeMigrations()
-}
-
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		// Setting centralized error hanling.
+		ErrorHandler: handlers.CustomErrorHandler,
+	})
 
 	app.Static("/", "./assets")
 

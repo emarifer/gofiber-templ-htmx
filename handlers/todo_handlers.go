@@ -22,15 +22,25 @@ func HandleViewList(c *fiber.Ctx) error {
 	todo := new(models.Todo)
 	todo.CreatedBy = c.Locals("userId").(uint64)
 
-	fm := fiber.Map{
-		"type": "error",
-	}
+	// fm := fiber.Map{"type": "error"}
 
 	todosSlice, err := todo.GetAllTodos()
 	if err != nil {
-		fm["message"] = fmt.Sprintf("something went wrong: %s", err)
+		if strings.Contains(err.Error(), "no such table") ||
+			strings.Contains(err.Error(), "database is locked") {
+			// "no such table" is the error that SQLite3 produces
+			// when some table does not exist, and we have only
+			// used it as an example of the errors that can be caught.
+			// Here you can add the errors that you are interested
+			// in throwing as `500` codes.
+			return fiber.NewError(
+				fiber.StatusServiceUnavailable,
+				"database temporarily out of service",
+			)
+		}
+		// fm["message"] = fmt.Sprintf("something went wrong: %s", err)
 
-		return flash.WithError(c, fm).Redirect("/todo/list")
+		// return flash.WithError(c, fm).Redirect("/todo/list")
 	}
 
 	tindex := todo_views.TodoIndex(todosSlice)
@@ -53,22 +63,41 @@ func HandleViewCreatePage(c *fiber.Ctx) error {
 	fromProtected := c.Locals(FROM_PROTECTED).(bool)
 
 	if c.Method() == "POST" {
-		fm := fiber.Map{
-			"type": "error",
-		}
-
 		newTodo := new(models.Todo)
 		newTodo.CreatedBy = c.Locals("userId").(uint64)
 		newTodo.Title = strings.Trim(c.FormValue("title"), " ")
 		newTodo.Description = strings.Trim(c.FormValue("description"), " ")
 
-		if _, err := newTodo.CreateTodo(); err != nil {
-			fm["message"] = fmt.Sprintf("something went wrong: %s", err)
+		fm := fiber.Map{
+			"type":    "error",
+			"message": "Task title empty!!",
+		}
+		if newTodo.Title == "" {
 
 			return flash.WithError(c, fm).Redirect("/todo/list")
 		}
 
-		return c.Redirect("/todo/list")
+		if _, err := newTodo.CreateTodo(); err != nil {
+			if strings.Contains(err.Error(), "no such table") ||
+				strings.Contains(err.Error(), "database is locked") {
+				// "no such table" is the error that SQLite3 produces
+				// when some table does not exist, and we have only
+				// used it as an example of the errors that can be caught.
+				// Here you can add the errors that you are interested
+				// in throwing as `500` codes.
+				return fiber.NewError(
+					fiber.StatusServiceUnavailable,
+					"database temporarily out of service",
+				)
+			}
+		}
+
+		fm = fiber.Map{
+			"type":    "success",
+			"message": "Task successfully created!!",
+		}
+
+		return flash.WithSuccess(c, fm).Redirect("/todo/list")
 	}
 
 	cindex := todo_views.CreateIndex()
@@ -99,12 +128,24 @@ func HandleViewEditPage(c *fiber.Ctx) error {
 	todo.ID = todoId
 	todo.CreatedBy = c.Locals("userId").(uint64)
 
-	fm := fiber.Map{
-		"type": "error",
-	}
+	fm := fiber.Map{"type": "error"}
 
 	recoveredTodo, err := todo.GetNoteById()
+
 	if err != nil {
+		if strings.Contains(err.Error(), "no such table") ||
+			strings.Contains(err.Error(), "database is locked") {
+			// "no such table" is the error that SQLite3 produces
+			// when some table does not exist, and we have only
+			// used it as an example of the errors that can be caught.
+			// Here you can add the errors that you are interested
+			// in throwing as `500` codes.
+			return fiber.NewError(
+				fiber.StatusServiceUnavailable,
+				"database temporarily out of service",
+			)
+		}
+
 		fm["message"] = fmt.Sprintf("something went wrong: %s", err)
 
 		return flash.WithError(c, fm).Redirect("/todo/list")
@@ -119,8 +160,30 @@ func HandleViewEditPage(c *fiber.Ctx) error {
 			todo.Status = false
 		}
 
+		fm = fiber.Map{
+			"type":    "error",
+			"message": "Task title empty!!",
+		}
+		if todo.Title == "" {
+
+			return flash.WithError(c, fm).Redirect("/todo/list")
+		}
+
 		_, err := todo.UpdateTodo()
 		if err != nil {
+			if strings.Contains(err.Error(), "no such table") ||
+				strings.Contains(err.Error(), "database is locked") {
+				// "no such table" is the error that SQLite3 produces
+				// when some table does not exist, and we have only
+				// used it as an example of the errors that can be caught.
+				// Here you can add the errors that you are interested
+				// in throwing as `500` codes.
+				return fiber.NewError(
+					fiber.StatusServiceUnavailable,
+					"database temporarily out of service",
+				)
+			}
+
 			fm["message"] = fmt.Sprintf("something went wrong: %s", err)
 
 			return flash.WithError(c, fm).Redirect("/todo/list")
@@ -158,11 +221,21 @@ func HandleDeleteTodo(c *fiber.Ctx) error {
 	todo.ID = todoId
 	todo.CreatedBy = c.Locals("userId").(uint64)
 
-	fm := fiber.Map{
-		"type": "error",
-	}
+	fm := fiber.Map{"type": "error"}
 
 	if err := todo.DeleteTodo(); err != nil {
+		if strings.Contains(err.Error(), "no such table") ||
+			strings.Contains(err.Error(), "database is locked") {
+			// "no such table" is the error that SQLite3 produces
+			// when some table does not exist, and we have only
+			// used it as an example of the errors that can be caught.
+			// Here you can add the errors that you are interested
+			// in throwing as `500` codes.
+			return fiber.NewError(
+				fiber.StatusServiceUnavailable,
+				"database temporarily out of service",
+			)
+		}
 		fm["message"] = fmt.Sprintf("something went wrong: %s", err)
 
 		return flash.WithError(c, fm).Redirect(

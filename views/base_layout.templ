@@ -29,7 +29,10 @@ templ Layout(
 			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
 		</head>
-		<body class="sample-transition" hx-boost="true">
+		<body
+			class="sample-transition"
+			hx-boost="true"
+		>
 			<header>
 				if !isError {
 					@partials.Navbar(fromProtected, username)

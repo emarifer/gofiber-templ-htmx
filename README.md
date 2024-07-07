@@ -23,6 +23,8 @@ In this application we have used the Fiber framework, which, as it says in its d
 
 Authentication (via session) is done using built-in middleware. On the other hand, a [dependency](https://github.com/sujit-baniya/flash) is also used to handle flash messages.
 
+Finally, using the Fiber framework also allows us centralized error handling.
+
 <br>
 
 >[!IMPORTANT]
@@ -30,7 +32,7 @@ Authentication (via session) is done using built-in middleware. On the other han
 
 The use of </>htmx allows behavior similar to that of a SPA, without page reloads when switching from one route to another or when making requests (via AJAX) to the backend.
 
-On the other hand, the styling of the views is achieved through Tailwind CSS and DaisyUI that are obtained from their respective CDNs.
+On the other hand, the styling of the views is achieved through Tailwind CSS and DaisyUI that are obtained from their respective CDNs. Likewise, the `SweetAlert2` library is used, a substitute for javascript pop-up boxes. In the same way it is obtained from its respective CDN.
 
 Finally, minimal use of [_hyperscript](https://hyperscript.org/) is made to achieve the action of closing alerts when they are displayed and the action of showing/hiding the password in corresponding text input fields.
 
@@ -49,9 +51,15 @@ Finally, minimal use of [_hyperscript](https://hyperscript.org/) is made to achi
 
 <br>
 
-###### Task update page & 404 Error Page:
+###### Task update page & popup alert based on SweetAlert2:
 
-<img src="doc/screenshot-3.png" width="40%" align="top">&nbsp;&nbsp;<img src="doc/screenshot-4.png" width="40%" align="top">
+<img src="doc/screenshot-3.png" width="40%" align="top">&nbsp;&nbsp;<img src="doc/screenshot-6.png" width="40%" align="top">
+
+<br>
+
+###### Centralized handling of 404 & 500 errors:
+
+<img src="doc/screenshot-4.png" width="40%" align="top">&nbsp;&nbsp;<img src="doc/screenshot-5.png" width="40%" align="top">
 
 <br>
 
@@ -69,7 +77,7 @@ Start the app in development mode:
 $ air # This also compiles the view templates automatically / Ctrl + C to stop the application
 ```
 
-Build for production:
+Build for production (previously it is necessary to regenerate the templates with the `templ generate` command; see explanation below):
 
 ```
 $ go build -ldflags="-s -w" -o ./bin/main . # ./bin/main to run the application / Ctrl + C to stop the application
